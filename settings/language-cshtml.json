@@ -1,0 +1,8 @@
+{
+  ".text.cshtml":{
+    "editor":{
+      "commentStart": "@* ",
+      "commentEnd": " *@"
+    }
+  }
+}

@@ -1,0 +1,166 @@
+@**
+  REF:  https://docs.microsoft.com/en-us/aspnet/core/mvc/views/razor
+**@
+
+
+@** TEST > Plain Old HTML  **@
+<p>Hello World</p>
+
+@** TEST > NOT WORKING > Razor embedded in HTML property  **@
+<div class="myClass @ViewData["myInjectedClass"] @(something)">World</div>
+
+@** TEST > Indexed property  **@
+<h2>@ViewData["Title"]</h2>
+<vsfix>&nbsp;</vsfix>
+<div>
+    email:
+    <input type="email" id="Email" name="Email" value="" />
+    <button type="submit"> Register </button>
+</div>
+
+@** TEST > In and out of HTML  **@
+<h1>About Us</h1>
+@Html.Partial( "_myPartial ")
+<p>This is the start of the html</p>
+
+@** TEST > NOT WORKING > Razor @if  **@
+@if(true){
+  <div class="test">
+      Some text
+  </div>
+}
+
+
+@** TEST > Implicit Razor Expressions  **@
+<p>@DateTime.Now</p>
+<p>Hello World</p>
+<p>@DateTime.IsLeapYear(2016)</p>
+
+
+@** TEST >  Explicit Razor expressions  **@
+<p>Last week this time: @(DateTime.Now - TimeSpan.FromDays(7))</p>
+
+@** TEST >  Explicit Razor expressions  **@
+@{
+    var joe = new Person("Joe", 33);
+}
+<p>Age @(joe.Age)</p>
+<p>Age@(joe.Age)</p>
+
+
+@** TEST >  Expression encoding  **@
+@("<span>Hello World</span>")
+@Html.Raw("<span> Hello World </span>")
+
+
+@** TEST >  Razor code blocks  **@
+@{
+    var output = "Hello World"
+}
+<p>The rendered result: @output</p>
+
+
+@** TEST >  Compound **@
+@using (Html.BeginForm())
+{
+    <div>
+        email:
+        <input type="email" id="Email" name="Email" value="" />
+        <button type="submit"> Register </button>
+    </div>
+}
+
+@** TEST >  Directive **@
+@{
+    var output = "Hello World"
+}
+
+<div>Output: @output</div>
+
+@** TEST >  Directive **@
+@using System.IO
+@{
+    var dir = Directory.GetCurrentDirectory();
+}
+<p>The Directory = @dir</p>
+
+
+@** TEST > De-limit @  -> NOT WORKING **@
+<p>@@Username</p>
+
+
+
+@***
+
+SPECIFIC EXAMPLES NOT WORKING YET
+
+===================================
+
+    @if (value % 2 == 0)
+    {
+        <p>The value was even</p>
+    }
+
+===================================
+
+    @if (value % 2 == 0)
+    {
+        <p>The value was even</p>
+    }
+    else if (value >= 1337)
+    {
+        <p>The value is large.</p>
+    }
+    else
+    {
+        <p>The value was not large and is odd.</p>
+    }
+
+===================================
+
+
+    @switch (value)
+    {
+        case 1:
+            <p>The value is 1!</p>
+            break;
+        case 1337:
+            <p>Your number is 1337!</p>
+            break;
+        default:
+            <p>Your number was not 1 or 1337.</p>
+            break;
+    }
+
+===================================
+
+    TEST >  Explicit Line Transition with @:
+    @for (var i = 0; i < people.Length; i++)
+    {
+        var person = people[i];
+        @:Name: @person.Name
+    }
+
+===================================
+
+    @for (var i = 0; i < people.Length; i++)
+    {
+        var person = people[i];
+        <text>Name: @person.Name</text>
+    }
+
+===================================
+
+    TEST > Implicit transitions
+    @{
+        var inCSharp = true;
+        <p>Now in HTML, was in @inCSharp</p>
+    }
+
+===================================
+
+===================================
+
+===================================
+
+@***
