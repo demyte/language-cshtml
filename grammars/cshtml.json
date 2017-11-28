@@ -109,13 +109,25 @@
         },
         "single-quotes": { "name": "string.quoted.single.cshtml",
           "begin": "'",
-          "end": "'"
+          "end": "'",
+          "patterns": [
+            {
+              "include": "text.html.basic"
+            },
+            {
+              "include": "#embedded-code"
+            }
         },
         "double-quotes": { "name": "string.quoted.double.cshtml",
           "begin": "\"",
           "end": "\"",
           "patterns": [
-            { "include": "text.html.basic" }
+            {
+              "include": "text.html.basic"
+            },
+            {
+              "include": "#embedded-code"
+            }
           ]
         },
         "round-brackets": { "name": "string.bracers.round.cshtml",
