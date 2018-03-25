@@ -1,143 +1,335 @@
-
 {
-    "name": "ASP.NET Razor",
-    "scopeName": "text.html.cshtml",
-    "fileTypes": ["cshtml", "gohtml"],
-    "patterns": [
-      {
-        "name": "section.embedded.source.cshtml",
-        "begin": "(@?([a-zA-Z0-9]+)?)(\\s[a-zA-Z0-9]+)?(\n|\r)?(\\{)",
-        "beginCaptures": {
-            "0": { "name": "section.embedded.begin.cshtml"},
-            "0": { "name": "punctuation.section.embedded.begin.cshtml" },
-            "1": { "name": "keyword.control.cshtml"}
+	"name": "ASP.NET Razor",
+	"scopeName": "text.html.cshtml",
+	"patterns": [
+        {
+            "include": "#razor-directives"
         },
-        "patterns": [
-            {
-                "name": "section.embedded.source.cshtml",
-                "begin": "(@?([a-zA-Z0-9]+)?)(\\s[a-zA-Z0-9]+)?(\n|\r)?(\\{)",
-                "beginCaptures": {
-                    "0": { "name": "section.embedded.begin.cshtml"},
-                    "0": { "name": "punctuation.section.embedded.begin.cshtml" },
-                    "1": { "name": "keyword.control.cshtml"}
-                },
-                "patterns": [
-                  { "include": "#embedded-code" },
-                  { "include": "#general-includes"},
-                  { "include": "source.cs"}
-                ],
-                "end": "\\}",
-                "endCaptures": {
-                    "0": { "name": "punctuation.section.embedded.begin.cshtml" }
-                }
-            },
-            { "include": "#embedded-code" },
-            { "include": "#general-includes"},
-            { "include": "source.cs"}
-        ],
-        "end": "\\}",
-        "endCaptures": {
-            "0": { "name": "punctuation.section.embedded.begin.cshtml" }
+        {
+            "include": "#razor-code-block"
         },
-        "comments": "Simple multi-line code section"
-      },
-      {
-          "begin": "(@[a-zA-Z0-9]+)(\\s?)",
-          "captures": {
-              "0": { "name": "section.embedded.begin.cshtml" },
-              "1": { "name": "keyword.control.cshtml"}
-          },
-          "patterns": [
-              {
-                  "match": "(([a-zA-Z0-9]+)(\\.)?)+?",
-                  "captures": {
-                      "2": { "name": "entity.name.tag.source.cshtml" },
-                      "3": { "name": "punctuation.separator.namespace.source.cshtml"}
-                  }
-              },
-              { "include": "#embedded-code" },
-              { "include": "#general-includes"}
-          ],
-          "end": "(\\n|\\s)",
-          "comments": "Single statement Razor tags"
-      },
-      {
-          "begin": "(@\\()",
-          "captures": {
-              "0": { "name": "section.embedded.begin.cshtml" },
-              "0": { "name": "punctuation.section.embedded.begin.cshtml" }
-          },
-          "patterns": [
-              { "include": "#embedded-code" },
-              { "include": "#general-includes"},
-              { "include": "source.cs" }
-          ],
-          "end": "(\\))",
-          "comments": "Covers same line Razor statments with embedded C#"
-      },
-      { "include": "#comments" },
-      { "include": "text.html.basic" }
-    ],
-    "repository": {
-        "embedded-code": {
-            "match": "(@?[a-zA-Z0-9]+)(\\.([a-zA-Z0-9]+))?",
-            "captures": {
-                "1": { "name": "keyword.control.cshtml" },
-                "3": { "name": "entity.name.tag.source.cshtml"}
-            },
+        {
+            "include": "#razor-else-if"
+        },
+        {
+            "include": "#razor-if"
+        },
+        {
+            "include": "#razor-else"
+        },
+        {
+            "include": "#razor-foreach"
+        },
+        {
+            "include": "#explicit-razor-expression"
+        },
+        {
+            "include": "#implicit-razor-expression"
+        },
+        {
+            "include": "text.html.basic"
+        }
+	],
+	"repository": {
+        "comments": {
+			"begin": "@\\*",
+			"captures": {
+				"0": {
+					"name": "punctuation.definition.comment.source.cshtml"
+				}
+			},
+			"end": "\\*@",
+			"name": "comment.block.cshtml"
+        },
+        "razor-directives": {
+            "name": "meta.directive.cshtml",
             "patterns": [
-              { "include": "#general-includes"}
+                {
+                    "include": "#using-directive"
+                },
+                {
+                    "include": "#model-directive"
+                },
+                {
+                    "include": "#inherits-directive"
+                },
+                {
+                    "include": "#inject-directive"
+                },
+                {
+                    "include": "#implements-directive"
+                },
+                {
+                    "include": "#layout-directive"
+                },
+                {
+                    "include": "#page-directive"
+                },
+                {
+                    "include": "#functions-directive"
+                }
             ]
         },
-        "comments": {
-            "begin": "@\\*",
+        "explicit-razor-expression": {
+            "name": "meta.expression.explicit.cshtml",
+            "begin": "(@)\\(",
             "captures": {
                 "0": {
-                    "name": "punctuation.definition.comment.source.cshtml"
+                    "name": "keyword.control.cshtml"
                 }
             },
-            "end": "\\*@",
-            "name": "comment.block.cshtml"
+            "patterns": [
+                {
+                    "include": "source.cs"
+                }
+            ],
+            "end": "\\)"
         },
-        "line-comments": { "name": "comment.line.double-slash.cshtml",
-          "begin": "(\\s*)//",
-          "end": "$(\\s*)"
+        "implicit-razor-expression": {
+            "name": "meta.expression.implicit.cshtml",
+            "begin": "(@)([a-zA-Z0-9\\.\\_\\(\\)]+)",
+            "captures": {
+                "0": {
+                    "name": "keyword.control.cshtml"
+                }
+            },
+            "end": "$"
         },
-        "block-comments": { "name": "comment.block.cshtml",
-          "begin": "/\\*",
-          "end": "((?=})|(\\*/))"
+        "using-directive": {
+            "name": "meta.directive.using.cshtml",
+            "begin": "(@using)\\s+",
+            "captures": {
+                "0": {
+                    "name": "keyword.control.cshtml"
+                }
+            },
+            "patterns": [
+                {
+                    "include": "#csharp-namespace-identifier"
+                }
+            ],
+            "end": "$"
         },
-        "single-quotes": { "name": "string.quoted.single.cshtml",
-          "begin": "'",
-          "end": "'"
+        "model-directive": {
+            "name": "meta.directive.model.cshtml",
+            "begin": "(@model)\\s+",
+            "captures": {
+                "0": {
+                    "name": "keyword.control.cshtml"
+                }
+            },
+            "patterns": [
+                {
+                    "include": "#csharp-type-name"
+                }
+            ],
+            "end": "$"
         },
-        "double-quotes": { "name": "string.quoted.double.cshtml",
-          "begin": "\"",
-          "end": "\"",
-          "patterns": [
-            { "include": "text.html.basic" }
-          ]
+        "inherits-directive": {
+            "name": "meta.directive.inherits.cshtml",
+            "begin": "(@inherits)\\s+",
+            "captures": {
+                "0": {
+                    "name": "keyword.control.cshtml"
+                }
+            },
+            "patterns": [
+                {
+                    "include": "#csharp-type-name"
+                }
+            ],
+            "end": "$"
         },
-        "round-brackets": { "name": "string.bracers.round.cshtml",
-          "begin": "\\(",
-          "end": "\\)"
+        "inject-directive": {
+            "name": "meta.directive.inject.cshtml",
+            "begin": "(@inject)\\s+",
+            "captures": {
+                "0": {
+                    "name": "keyword.control.cshtml"
+                }
+            },
+            "patterns": [
+                {
+                    "include": "#csharp-type-name"
+                }
+            ],
+            "end": "$"
         },
-        "squiggly-brackets": { "name": "string.bracers.squiggly.cshtml",
-          "begin": "{",
-          "end": "}"
+        "implements-directive": {
+            "name": "meta.directive.implements.cshtml",
+            "begin": "(@implements)\\s+",
+            "captures": {
+                "0": {
+                    "name": "keyword.control.cshtml"
+                }
+            },
+            "patterns": [
+                {
+                    "include": "#csharp-type-name"
+                }
+            ],
+            "end": "$"
         },
-
-        "general-includes": {
-          "patterns": [
-            { "include": "#comments"},
-            { "include": "#line-comments" },
-            { "include": "#block-comments" },
-            { "include": "#round-brackets" },
-            { "include": "#squiggly-brackets" },
-            { "include": "#single-quotes" },
-            { "include": "#double-quotes" },
-            { "include": "text.html.basic"}
-          ]
+        "layout-directive": {
+            "name": "meta.directive.layout.cshtml",
+            "begin": "(@layout)\\s+",
+            "captures": {
+                "0": {
+                    "name": "keyword.control.cshtml"
+                }
+            },
+            "patterns": [
+                {
+                    "include": "#csharp-type-name"
+                }
+            ],
+            "end": "$"
+        },
+        "page-directive": {
+            "name": "meta.directive.page.cshtml",
+            "begin": "(@page)\\s+",
+            "captures": {
+                "0": {
+                    "name": "keyword.control.cshtml"
+                }
+            },
+            "patterns": [
+                {
+                    "include": "source.cs"
+                }
+            ],
+            "end": "$"
+        },
+        "functions-directive": {
+            "name": "meta.directive.functions.cshtml",
+            "match": "(@functions)",
+            "captures": {
+                "0": {
+                    "name": "keyword.control.cshtml"
+                }
+            }
+        },
+        "razor-if": {
+            "begin": "(@if)",
+            "captures": {
+                "0": {
+                    "name": "keyword.control.cshtml"
+                }
+            },
+            "patterns": [
+                {
+                    "include": "source.cs"
+                }
+            ],
+            "end": "$"
+        },
+        "razor-else": {
+            "begin": "(else)",
+            "captures": {
+                "0": {
+                    "name": "keyword.control.cshtml"
+                }
+            },
+            "patterns": [
+                {
+                    "include": "source.cs"
+                }
+            ],
+            "end": "$"
+        },
+        "razor-else-if": {
+            "begin": "(else\\s+if)",
+            "captures": {
+                "0": {
+                    "name": "keyword.control.cshtml"
+                }
+            },
+            "patterns": [
+                {
+                    "include": "source.cs"
+                }
+            ],
+            "end": "$"
+        },
+        "razor-foreach": {
+            "begin": "(@foreach)\\s+\\(",
+            "captures": {
+                "0": {
+                    "name": "keyword.control.cshtml"
+                }
+            },
+            "patterns": [
+                {
+                    "include": "source.cs"
+                }
+            ],
+            "end": "\\)"
+        },
+        "razor-code-block": {
+            "begin": "@?\\{",
+            "captures": {
+                "0": {
+                    "name": "keyword.control.cshtml"
+                }
+            },
+            "patterns": [
+                {
+                    "include": "text.html.cshtml"
+                },
+                {
+                    "include": "source.cs"
+                }
+            ],
+            "end": "\\}"
+        },
+        "csharp-namespace-identifier": {
+            "patterns": [
+                {
+                    "name": "entity.name.type.namespace.cs",
+                    "match": "[_[:alpha:]][_[:alnum:]]*"
+                }
+            ]
+        },
+        "csharp-type-name": {
+			"patterns": [
+				{
+					"match": "([_[:alpha:]][_[:alnum:]]*)\\s*(\\:\\:)",
+					"captures": {
+						"1": {
+							"name": "entity.name.type.alias.cs"
+						},
+						"2": {
+							"name": "punctuation.separator.coloncolon.cs"
+						}
+					}
+				},
+				{
+					"match": "([_[:alpha:]][_[:alnum:]]*)\\s*(\\.)",
+					"captures": {
+						"1": {
+							"name": "storage.type.cs"
+						},
+						"2": {
+							"name": "punctuation.accessor.cs"
+						}
+					}
+				},
+				{
+					"match": "(\\.)\\s*([_[:alpha:]][_[:alnum:]]*)",
+					"captures": {
+						"1": {
+							"name": "punctuation.accessor.cs"
+						},
+						"2": {
+							"name": "storage.type.cs"
+						}
+					}
+				},
+				{
+					"name": "storage.type.cs",
+					"match": "[_[:alpha:]][_[:alnum:]]*"
+				}
+			]
         }
-    }
+	}
 }
