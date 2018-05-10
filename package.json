@@ -1,18 +1,18 @@
 {
-  "name": "language-cshtml",
-  "version": "0.3.0",
-  "description": "ASP.NET Razor (cshtml) language support in Atom",
-  "engines": {
-    "atom": "*",
-    "node": "*"
-  },
-  "homepage": "",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/demyte/language-cshtml.git"
-  },
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/demyte/language-cshtml/issues"
-  }
+	"name": "language-cshtml",
+	"version": "0.4.0",
+	"description": "ASP.NET Razor (cshtml) language support in Atom",
+	"engines": {
+		"atom": "*",
+		"node": "*"
+	},
+	"homepage": "https://github.com/demyte/language-cshtml",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/demyte/language-cshtml.git"
+	},
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/demyte/language-cshtml/issues"
+	}
 }
