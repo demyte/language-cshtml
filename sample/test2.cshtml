@@ -1,0 +1,97 @@
+@{
+    Layout = null;
+}@model IEnumerable<TodoServer.Models.TodoItem>
+@using Newtonsoft.Json;
+@using Newtonsoft.Json.Linq;
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Todo list</title>
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="~/Styles/todo.css" />
+</head>
+<body>
+    @{
+        var count = Model.Count();
+        var remain = Model.Count(todo => !todo.Done);
+    }
+    <div class="app-container">
+        <h1 class="app-title">Todo list</h1>
+        <div class="app-area">
+            <form class="todo-form" id="todoForm">
+                <label class="todo-form__label" style="@(count>0?"":"display:none")">
+                    <input type="checkbox" id="markAll" @(remain == 0 ? "checked" : "") />
+                </label>
+                <input class="todo-form__input" placeholder="What needs to be done&hellip;" data-role="formInput" spellcheck="true" />
+                <div class="todo-form__btnArea"><button type="submit" class="todo-form__btn">Add</button></div>
+            </form>
+            <ul class="todo-list" id="listArea" data-ssr="true">
+                @foreach (var todo in Model.Where(todo =>
+                {
+                    switch ((string)ViewData["route"])
+                    {
+                        case "index":
+                            return true;
+                        case "completed":
+                            return todo.Done;
+                        case "remaining":
+                            return !todo.Done;
+                    }
+                    return false;
+                }).OrderBy(todo => todo.ID).Reverse())
+                {
+                    <li class="todo-item @(todo.Done ? "todo-item--done" : "")" data-ssr="true" data-todo-id="@todo.ID">
+                        <label class="todo-item__label">
+                            <input type="checkbox" data-role="doneCheck" @(todo.Done ? "checked" : "") />
+                        </label>
+                        <div class="todo-item__content">
+                            <button type="button" class="todo-item__clear" data-role="destroyTodo"></button>
+                            <div class="todo-item__text" data-role="content">@todo.Content</div>
+                            <label class="todo-item__inputArea">
+                                <input class="todo-item__input" data-role="todoInput" spellcheck="true" value="@todo.Content" />
+                            </label>
+                        </div>
+                    </li>
+                }
+            </ul>
+        </div>
+        <p class="todo-status" id="todoStatus" style="@(count>0?"":"display:none")">
+            <span id="todoStatusText" class="todo-status__text">
+                @remain @(remain == 1 ? "item" : "items") left.
+            </span>
+            <a href="#" id="clearCompleted" class="todo-status__link todo-status__clearLink @(count>remain?"":"todo-status__clearLink--hidden")">Clear completed</a>
+            <span id="hashLinks" class="todo-status__linkArea">
+                <a href="/" data-route-link="all" class="todo-status__link @((string)ViewData["route"]=="index"?"todo-status__link--current":"")">All</a>&ensp;&middot;&ensp;<a href="/Todos/Completed/" data-route-link="completed" class="todo-status__link @((string)ViewData["route"]=="completed"?"todo-status__link--current":"")">Completed</a>&ensp;&middot;&ensp;<a href="/Todos/Remaining/" data-route-link="remaining" class="todo-status__link @((string)ViewData["route"]=="remaining"?"todo-status__link--current":"")">Remaining</a>
+            </span>
+        </p>
+    </div>
+    <div class="indicator" id="indicator"></div>
+    <script id="todoItemSource" type="text/plain">
+        <li class="todo-item">
+            <label class="todo-item__label">
+                <input type="checkbox" data-role="doneCheck" />
+            </label>
+            <div class="todo-item__content">
+                <button type="button" class="todo-item__clear" data-role="destroyTodo"></button>
+                <div class="todo-item__text" data-role="content"></div>
+                <label class="todo-item__inputArea">
+                    <input class="todo-item__input" data-role="todoInput" spellcheck="true" />
+                </label>
+            </div>
+        </li>
+    </script>
+    <div class="toast toast--hidden" data-toast="toast">
+        <div class="toast__inner">
+            <a href="#" data-toast="close" class="toast__closeBtn"></a>
+            <p class="toast__content" data-toast="content">I am a toast!</p>
+        </div>
+    </div>
+    <script type="application/json" id="initJSON">
+        @Html.Raw(JArray.FromObject(Model).ToString(Formatting.None))
+    </script>
+    <script src="~/Scripts/jquery-1.12.4.min.js"></script>
+    <script src="~/Scripts/app/define.js"></script>
+    <script src="~/Scripts/app/index.js"></script>
+</body>
+</html>

@@ -1,166 +1,61 @@
-@**
-  REF:  https://docs.microsoft.com/en-us/aspnet/core/mvc/views/razor
-**@
+@using Test.Test
+@using Test1
 
-
-@** TEST > Plain Old HTML  **@
-<p>Hello World</p>
-
-@** TEST > NOT WORKING > Razor embedded in HTML property  **@
-<div class="myClass @ViewData["myInjectedClass"] @(something)">World</div>
-
-@** TEST > Indexed property  **@
-<h2>@ViewData["Title"]</h2>
-<vsfix>&nbsp;</vsfix>
-<div>
-    email:
-    <input type="email" id="Email" name="Email" value="" />
-    <button type="submit"> Register </button>
-</div>
-
-@** TEST > In and out of HTML  **@
-<h1>About Us</h1>
-@Html.Partial( "_myPartial ")
-<p>This is the start of the html</p>
-
-@** TEST > NOT WORKING > Razor @if  **@
-@if(true){
-  <div class="test">
-      Some text
-  </div>
-}
-
-
-@** TEST > Implicit Razor Expressions  **@
-<p>@DateTime.Now</p>
-<p>Hello World</p>
-<p>@DateTime.IsLeapYear(2016)</p>
-
-
-@** TEST >  Explicit Razor expressions  **@
-<p>Last week this time: @(DateTime.Now - TimeSpan.FromDays(7))</p>
-
-@** TEST >  Explicit Razor expressions  **@
 @{
-    var joe = new Person("Joe", 33);
-}
-<p>Age @(joe.Age)</p>
-<p>Age@(joe.Age)</p>
+    var total = 0;
+    var totalMessage = "";
+    @* a multiline
+      razor comment embedded in csharp *@
+    if (IsPost) {
 
+        // Retrieve the numbers that the user entered.
+        var num1 = Request["text1"];
+        var num2 = Request["text2"];
 
-@** TEST >  Expression encoding  **@
-@("<span>Hello World</span>")
-@Html.Raw("<span> Hello World </span>")
-
-
-@** TEST >  Razor code blocks  **@
-@{
-    var output = "Hello World"
-}
-<p>The rendered result: @output</p>
-
-
-@** TEST >  Compound **@
-@using (Html.BeginForm())
-{
-    <div>
-        email:
-        <input type="email" id="Email" name="Email" value="" />
-        <button type="submit"> Register </button>
-    </div>
+        // Convert the entered strings into integers numbers and add.
+        total = num1.AsInt() + num2.AsInt();
+		<italic><bold>totalMessage = "Total = " + total;</bold></italic>
+    }
 }
 
-@** TEST >  Directive **@
-@{
-    var output = "Hello World"
-}
+@await test();
 
-<div>Output: @output</div>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Add Numbers</title>
+    <meta charset="utf-8" />
+  </head>
+<body>
+  <p>Enter two whole numbers and then click <strong>Add</strong>.</p>
+  <form action="" method="post">
+    <p><label for="text1">First Number:</label>
+      <input type="text" name="text1" />
+    </p>
+    <p><label for="text2">Second Number:</label>
+      <input type="text" name="text2" />
+    </p>
+    <p><input type="submit" value="Add" /></p>
+  </form>
 
-@** TEST >  Directive **@
-@using System.IO
-@{
-    var dir = Directory.GetCurrentDirectory();
-}
-<p>The Directory = @dir</p>
+	@* now we call the totalMessage method
+	   (a multi line razor comment outside code) *@
 
+  <p>@totalMessage</p>
 
-@** TEST > De-limit @  -> NOT WORKING **@
-<p>@@Username</p>
+  <p>@(totalMessage+"!")</p>
 
+  An email address (with escaped at character): name@@domain.com
 
+  @foreach (var i in test) {
+    <div>@i</div>
+  }
 
-@***
+  @for (int i = 0; i < 100; i++) {
+    <div>@i</div>
+  }
 
-SPECIFIC EXAMPLES NOT WORKING YET
+  <a href="mailto:Support@contoso.com">Support@contoso.com</a>
 
-===================================
-
-    @if (value % 2 == 0)
-    {
-        <p>The value was even</p>
-    }
-
-===================================
-
-    @if (value % 2 == 0)
-    {
-        <p>The value was even</p>
-    }
-    else if (value >= 1337)
-    {
-        <p>The value is large.</p>
-    }
-    else
-    {
-        <p>The value was not large and is odd.</p>
-    }
-
-===================================
-
-
-    @switch (value)
-    {
-        case 1:
-            <p>The value is 1!</p>
-            break;
-        case 1337:
-            <p>Your number is 1337!</p>
-            break;
-        default:
-            <p>Your number was not 1 or 1337.</p>
-            break;
-    }
-
-===================================
-
-    TEST >  Explicit Line Transition with @:
-    @for (var i = 0; i < people.Length; i++)
-    {
-        var person = people[i];
-        @:Name: @person.Name
-    }
-
-===================================
-
-    @for (var i = 0; i < people.Length; i++)
-    {
-        var person = people[i];
-        <text>Name: @person.Name</text>
-    }
-
-===================================
-
-    TEST > Implicit transitions
-    @{
-        var inCSharp = true;
-        <p>Now in HTML, was in @inCSharp</p>
-    }
-
-===================================
-
-===================================
-
-===================================
-
-@***
+</body>
+</html>
