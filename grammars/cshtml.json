@@ -30,6 +30,9 @@
             "include": "text.html.basic"
         }
 	],
+	"fileTypes": [
+    "cshtml"
+  ],
 	"repository": {
         "comments": {
 			"begin": "@\\*",
