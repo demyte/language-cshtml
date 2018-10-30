@@ -1,6 +1,9 @@
 {
 	"name": "ASP.NET Razor",
 	"scopeName": "text.html.cshtml",
+	"fileTypes": [
+		"cshtml"
+	],
 	"patterns": [
         {
             "include": "#razor-directives"
